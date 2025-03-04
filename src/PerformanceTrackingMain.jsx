@@ -1,7 +1,9 @@
+
 import { useState } from "react";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 import { FaEllipsisV } from "react-icons/fa";
 import AlertBox from "./AlertBox";
+
 const yearlySalesData = [
   { month: "Jan", target: 1000, achieved: 800 },
   { month: "Feb", target: 1200, achieved: 900 },
@@ -48,23 +50,26 @@ const deperformingEmployees = [
   "Orxan Hüseyinov",
 ];
 
-const PerformanceTrackingMain = () => {
+const PerformanceTrackingMain = ({ isSidebarOpen }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
   const totalPages = Math.ceil(deperformingEmployees.length / rowsPerPage);
   const displayedEmployees = deperformingEmployees.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-    const [alertOpen, setAlertOpen] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState("");
-  
-    const openAlert = (employee) => {
-      setSelectedEmployee(employee);
-      setAlertOpen(true);
-    };
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+
+  const openAlert = (employee) => {
+    setSelectedEmployee(employee);
+    setAlertOpen(true);
+  };
+
   return (
-    <div className="p-8 bg-blue-50 min-h-screen">
+    <div className={`mt-20 p-4 md:p-6 bg-gray-100 min-h-screen transition-all duration-300 ${
+      isSidebarOpen ? "lg:ml-72 lg:w-[calc(100%-18rem)]" : "w-full"
+    }`}>
       {/* Header */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold mb-4">INDIVIDUAL AND TEAM SALES AGAINST TARGET (YEARLY)</h3>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={yearlySalesData}>
@@ -79,37 +84,39 @@ const PerformanceTrackingMain = () => {
       </div>
 
       {/* Quarterly Performance Table */}
-      <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg mt-6">
         <h3 className="text-lg font-semibold mb-4">TEAMS QUARTERLY PERFORMANCE</h3>
-        <table className="w-full text-gray-700 text-lg">
-          <thead>
-            <tr className="bg-gray-200 text-gray-600 uppercase text-sm">
-              <th className="py-3 px-6">TEAM NO</th>
-              <th className="py-3 px-6">Sales Achieved</th>
-              <th className="py-3 px-6">Target Assigned</th>
-              <th className="py-3 px-6">Achievement Rate</th>
-              <th className="py-3 px-6">Incentives Earned</th>
-              <th className="py-3 px-6">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {quarterlyPerformance.map((row, index) => (
-              <tr key={index} className={index % 2 === 0 ? "bg-blue-50" : "bg-white"}>
-                <td className="py-3 px-6">{row.team}</td>
-                <td className="py-3 px-6">{row.achieved}</td>
-                <td className="py-3 px-6">{row.target}</td>
-                <td className="py-3 px-6">{row.rate}</td>
-                <td className="py-3 px-6">{row.incentives}</td>
-                <td className="py-3 px-6"><FaEllipsisV /></td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-gray-700 text-lg">
+            <thead>
+              <tr className="bg-gray-200 text-gray-600 uppercase text-sm">
+                <th className="py-3 px-6">TEAM NO</th>
+                <th className="py-3 px-6">Sales Achieved</th>
+                <th className="py-3 px-6">Target Assigned</th>
+                <th className="py-3 px-6">Achievement Rate</th>
+                <th className="py-3 px-6">Incentives Earned</th>
+                <th className="py-3 px-6">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {quarterlyPerformance.map((row, index) => (
+                <tr key={index} className={index % 2 === 0 ? "bg-blue-50" : "bg-white"}>
+                  <td className="py-3 px-6">{row.team}</td>
+                  <td className="py-3 px-6">{row.achieved}</td>
+                  <td className="py-3 px-6">{row.target}</td>
+                  <td className="py-3 px-6">{row.rate}</td>
+                  <td className="py-3 px-6">{row.incentives}</td>
+                  <td className="py-3 px-6"><FaEllipsisV /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Incentive Distribution & Deperforming Employees */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 mt-6">
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold mb-4">Incentive Distribution</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={incentiveData}>
@@ -122,24 +129,22 @@ const PerformanceTrackingMain = () => {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
-        <h3 className="text-lg font-semibold mb-4">Deperforming Employees</h3>
-        {deperformingEmployees.map((employee, index) => (
-          <div key={index} className="flex justify-between items-center bg-gray-100 p-3 rounded-lg mb-2">
-            <p>{employee}</p>
-            <button className="bg-red-500 text-white text-xs px-2 py-1 rounded" onClick={() => openAlert(employee)}>
-              ALERT
-            </button>
-          </div>
-        ))}
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
+          <h3 className="text-lg font-semibold mb-4">Deperforming Employees</h3>
+          {deperformingEmployees.map((employee, index) => (
+            <div key={index} className="flex justify-between items-center bg-gray-100 p-3 rounded-lg mb-2">
+              <p>{employee}</p>
+              <button className="bg-red-500 text-white text-xs px-2 py-1 rounded" onClick={() => openAlert(employee)}>
+                ALERT
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Alert Modal - Using AlertBox Component */}
+      {/* Alert Modal */}
       {alertOpen && <AlertBox selectedEmployee={selectedEmployee} onClose={() => setAlertOpen(false)} />}
     </div>
-      </div>
-   
-   
   );
 };
 

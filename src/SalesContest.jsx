@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { BarChart, Bar, CartesianGrid, Tooltip, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -30,18 +31,20 @@ const pieChartData = [
   { name: "Sales", value: 9, color: "#ffa500" },
 ];
 
-const SalesContest = () => {
+const SalesContest = ({ isSidebarOpen }) => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const totalPages = Math.ceil(contestData.length / rowsPerPage);
   const displayedRows = contestData.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
-    <div className="p-8 bg-blue-50 min-h-screen">
+    <div className={`mt-20 p-4 md:p-6 bg-gray-100 min-h-screen transition-all duration-300 ${
+      isSidebarOpen ? "lg:ml-72 lg:w-[calc(100%-18rem)]" : "w-full"
+    }`}>
       {/* Leaderboard & Charts */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="flex flex-col md:grid md:grid-cols-3 gap-6">
         {/* Leaderboard */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold mb-4">Leader Board</h3>
           <div className="flex flex-col items-center space-y-4">
             {leaderboardData.map((user, index) => (
@@ -62,7 +65,7 @@ const SalesContest = () => {
         </div>
 
         {/* Bar Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold mb-4">Performance Progress</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={contestChartData}>
@@ -76,7 +79,7 @@ const SalesContest = () => {
         </div>
 
         {/* Pie Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
           <h3 className="text-lg font-semibold mb-4">Department Participation</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -99,28 +102,30 @@ const SalesContest = () => {
       </div>
 
       {/* Contest Table */}
-      <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg mt-6">
         <h3 className="text-lg font-semibold mb-4">Contest Status</h3>
-        <table className="w-full text-gray-700 text-lg">
-          <thead>
-            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-              <th className="py-3 px-6">Team Name</th>
-              <th className="py-3 px-6">Contest Name</th>
-              <th className="py-3 px-6">Target</th>
-              <th className="py-3 px-6">Contest Update</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedRows.map((row, index) => (
-              <tr key={index} className={index % 2 === 0 ? "bg-blue-50" : "bg-white"}>
-                <td className="py-3 px-6">{row.team}</td>
-                <td className="py-3 px-6">{row.contest}</td>
-                <td className="py-3 px-6">{row.target}</td>
-                <td className="py-3 px-6">{row.update}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-gray-700 text-lg">
+            <thead>
+              <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th className="py-3 px-6">Team Name</th>
+                <th className="py-3 px-6">Contest Name</th>
+                <th className="py-3 px-6">Target</th>
+                <th className="py-3 px-6">Contest Update</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayedRows.map((row, index) => (
+                <tr key={index} className={index % 2 === 0 ? "bg-blue-50" : "bg-white"}>
+                  <td className="py-3 px-6">{row.team}</td>
+                  <td className="py-3 px-6">{row.contest}</td>
+                  <td className="py-3 px-6">{row.target}</td>
+                  <td className="py-3 px-6">{row.update}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* Pagination */}
         <div className="flex justify-center mt-4 space-x-2">

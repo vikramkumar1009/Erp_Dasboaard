@@ -7,30 +7,40 @@ import SalesTable from "./ManagerDashPages/SalesTable";
 import SalesChart from "./ManagerDashPages/SalesChart";
 import PerformanceTrackingTeam from "./ManagerDashPages/PerformanceTrackingTeam";
 
-const ManagerDash = () => {
+const ManagerDash = ({ isSidebarOpen }) => {
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Welcome, ALLEN!</h1>
+    <div
+      className={`mt-20 p-4 md:p-6 bg-gray-100 min-h-screen transition-all duration-300 ${
+        isSidebarOpen ? "lg:ml-72 lg:w-[calc(100%-18rem)]" : "w-full"
+      }`}
+    >
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">
+        Welcome, ALLEN!
+      </h1>
 
       {/* Sales Overview Section */}
       <SalesOverview />
 
       {/* Sales Table & Sales Graph */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
-        <SalesTable />
-        <SalesChart />
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 mt-6">
+        <div className="w-full overflow-x-auto">
+          <SalesTable />
+        </div>
+        <div className="w-full">
+          <SalesChart />
+        </div>
       </div>
 
       {/* Sales Contest & Target Achievement */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 mt-6">
         <SalesContest />
         <PerformanceTracking />
       </div>
 
       {/* Team Management & Performance Tracking */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 mt-6">
         <TeamManagement />
-        <PerformanceTrackingTeam/>
+        <PerformanceTrackingTeam />
       </div>
     </div>
   );
